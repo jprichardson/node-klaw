@@ -30,7 +30,10 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 `stats` is an instance of [fs.Stats](https://nodejs.org/api/fs.html#fs_class_fs_stats).
 
 - `directory`: The directory to recursively walk. Type `string`.
-- `options`: Right now it's just [Readable stream options](https://nodejs.org/api/stream.html#stream_new_stream_readable_options).
+- `options`: [Readable stream options](https://nodejs.org/api/stream.html#stream_new_stream_readable_options) and
+the following:
+  - `queueMethod`: Either `'shift'` or `'pop'`. Type `string`.
+  - `pathSorter`: Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort). Type `function`.
 
 **Streams 1 (push) example:**
 
@@ -204,6 +207,12 @@ klaw('/some/dir')
     console.log('all done!')
   })
 ```
+
+### Searching Strategy
+
+Pass in options for `queueMethod` and `pathSorter` to affect how the file system
+is recursively iterated. See the code for more details, it's less than 50 lines :)
+
 
 
 License
