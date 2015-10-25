@@ -1,3 +1,7 @@
+1.1.0 / 2015-10-25
+------------------
+- added `queueMethod` and `pathSorter` to `options` to affect searching strategy.
+
 1.0.0 / 2015-10-25
 ------------------
 - removed unused `filter` param
