@@ -1,6 +1,8 @@
-var fse = require('fs-extra')
+var fs = require('fs')
+var mkdirp = require('mkdirp')
 var os = require('os')
 var path = require('path')
+var rimraf = require('rimraf')
 var _test = require('tape')
 var klaw = require('../')
 var fixtures = require('./fixtures')
@@ -9,22 +11,27 @@ var fixtures = require('./fixtures')
 function test (desc, testFn) {
   _test(desc, function (t) {
     var testDir = path.join(os.tmpdir(), 'klaw-tests')
-    fse.emptyDir(testDir, function (err) {
+    rimraf(testDir, function (err) {
       if (err) return t.end(err)
+      mkdirp(testDir, function (err) {
+        if (err) return t.end(err)
 
-      fixtures.forEach(function (f) {
-        f = path.join(testDir, f)
-        fse.outputFileSync(f, path.basename(f, path.extname(f)))
-      })
-
-      var oldEnd = t.end
-      t.end = function () {
-        fse.remove(testDir, function (err) {
-          err ? oldEnd.apply(t, [err]) : oldEnd.apply(t, arguments)
+        fixtures.forEach(function (f) {
+          f = path.join(testDir, f)
+          var dir = path.dirname(f)
+          mkdirp.sync(dir)
+          fs.writeFileSync(f, path.basename(f, path.extname(f)))
         })
-      }
 
-      testFn(t, testDir)
+        var oldEnd = t.end
+        t.end = function () {
+          rimraf(testDir, function (err) {
+            err ? oldEnd.apply(t, [err]) : oldEnd.apply(t, arguments)
+          })
+        }
+
+        testFn(t, testDir)
+      })
     })
   })
 }

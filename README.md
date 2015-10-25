@@ -38,7 +38,7 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 var klaw = require('klaw')
 
 var items = [] // files, directories, symlinks, etc
-klaw(TEST_DIR)
+klaw('/some/dir')
   .on('data', function (item) {
     items.push(item.path)
   })
