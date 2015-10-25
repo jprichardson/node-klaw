@@ -29,7 +29,7 @@ Walker.prototype._read = function () {
       if (err) return self.emit('error', err, { path: item, stats: stats })
 
       items = items.map(function (part) { return path.join(item, part) })
-      if (self.options.pathSorter) self.items.sort(self.options.pathSorter)
+      if (self.options.pathSorter) items.sort(self.options.pathSorter)
       items.forEach(function (item) { self.paths.push(item) })
 
       self.push({ path: item, stats: stats })
@@ -37,8 +37,8 @@ Walker.prototype._read = function () {
   })
 }
 
-function walk (path) {
-  return new Walker(path)
+function walk (root, options) {
+  return new Walker(root, options)
 }
 
 module.exports = walk
