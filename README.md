@@ -1,7 +1,10 @@
 Node.js - klaw
 ==============
 
-A file system walker extracted from [fs-extra](https://github.com/jprichardson/node-fs-extra).
+A Node.js file system walker extracted from [fs-extra](https://github.com/jprichardson/node-fs-extra).
+
+[![build status](https://api.travis-ci.org/jprichardson/node-klaw.svg)](http://travis-ci.org/jprichardson/node-klaw)
+[![windows build status](https://ci.appveyor.com/api/projects/status/github/jprichardson/node-klaw?branch=master&svg=true)](https://ci.appveyor.com/project/jprichardson/node-klaw/branch/master)
 
 
 Install

@@ -1,74 +1,75 @@
-var assert = require('assert')
-var path = require('path')
-var os = require('os')
 var fse = require('fs-extra')
+var os = require('os')
+var path = require('path')
+var _test = require('tape')
 var klaw = require('../')
 var fixtures = require('./fixtures')
 
-/* global afterEach, beforeEach, describe, it */
-// trinity: mocha
+// for all practical purposes, this is a beforeEach and afterEach
+function test (desc, testFn) {
+  _test(desc, function (t) {
+    var testDir = path.join(os.tmpdir(), 'klaw-tests')
+    fse.emptyDir(testDir, function (err) {
+      if (err) return t.end(err)
 
-describe('walk()', function () {
-  var TEST_DIR
-
-  beforeEach(function (done) {
-    TEST_DIR = path.join(os.tmpdir(), 'fs-extra', 'walk')
-    fse.emptyDir(TEST_DIR, function (err) {
-      if (err) return done(err)
       fixtures.forEach(function (f) {
-        f = path.join(TEST_DIR, f)
+        f = path.join(testDir, f)
         fse.outputFileSync(f, path.basename(f, path.extname(f)))
       })
-      done()
+
+      var oldEnd = t.end
+      t.end = function () {
+        fse.remove(testDir, function (err) {
+          err ? oldEnd.apply(t, [err]) : oldEnd.apply(t, arguments)
+        })
+      }
+
+      testFn(t, testDir)
     })
   })
+}
 
-  afterEach(function (done) {
-    fse.remove(TEST_DIR, done)
-  })
+test('should work w/ streams 1', function (t, testDir) {
+  var items = []
+  klaw(testDir)
+    .on('data', function (item) {
+      items.push(item.path)
+    })
+    .on('error', t.end)
+    .on('end', function () {
+      items.sort()
+      var expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i', 'h/i/j',
+        'h/i/j/k.txt', 'h/i/l.txt', 'h/i/m.jpg']
+      expected = expected.map(function (item) {
+        return path.join(path.join(testDir, item))
+      })
+      expected.unshift(testDir)
 
-  it('should work w/ streams 1', function (done) {
-    var items = []
-    klaw(TEST_DIR)
-      .on('data', function (item) {
-        assert.strictEqual(typeof item.stats, 'object') // verify that property is there
+      t.same(items, expected)
+      t.end()
+    })
+})
+
+test('should work w/ streams 2/3', function (t, testDir) {
+  var items = []
+  klaw(testDir)
+    .on('readable', function () {
+      var item
+      while ((item = this.read())) {
         items.push(item.path)
+      }
+    })
+    .on('error', t.end)
+    .on('end', function () {
+      items.sort()
+      var expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i', 'h/i/j',
+        'h/i/j/k.txt', 'h/i/l.txt', 'h/i/m.jpg']
+      expected = expected.map(function (item) {
+        return path.join(path.join(testDir, item))
       })
-      .on('end', function () {
-        items.sort()
-        var expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i', 'h/i/j',
-          'h/i/j/k.txt', 'h/i/l.txt', 'h/i/m.jpg']
-        expected = expected.map(function (item) {
-          return path.join(path.join(TEST_DIR, item))
-        })
-        expected.unshift(TEST_DIR)
+      expected.unshift(testDir)
 
-        assert.deepEqual(items, expected)
-        done()
-      })
-  })
-
-  it('should work w/ streams 2/3', function (done) {
-    var items = []
-    klaw(TEST_DIR)
-      .on('readable', function () {
-        var item
-        while ((item = this.read())) {
-          assert.strictEqual(typeof item.stats, 'object') // verify that property is there
-          items.push(item.path)
-        }
-      })
-      .on('end', function () {
-        items.sort()
-        var expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i', 'h/i/j',
-          'h/i/j/k.txt', 'h/i/l.txt', 'h/i/m.jpg']
-        expected = expected.map(function (item) {
-          return path.join(path.join(TEST_DIR, item))
-        })
-        expected.unshift(TEST_DIR)
-
-        assert.deepEqual(items, expected)
-        done()
-      })
-  })
+      t.same(items, expected)
+      t.end()
+    })
 })
