@@ -6,58 +6,34 @@ var assign = require('./assign')
 
 function Walker (dir, streamOptions) {
   Readable.call(this, assign({}, streamOptions, { objectMode: true }))
-  this.path = path.resolve(dir)
-  this.pending = 0
-  this.start()
+  this.root = path.resolve(dir)
+  this.paths = [this.root]
 }
 util.inherits(Walker, Readable)
 
-Walker.prototype.start = function () {
-  this.visit(this.path)
-  return this
-}
-
-Walker.prototype.visit = function (item) {
-  this.pending++
+Walker.prototype._read = function () {
+  if (this.paths.length === 0) return this.push(null)
   var self = this
+  var item = this.paths.shift()
 
   fs.lstat(item, function (err, stats) {
-    if (err) {
-      self.emit('error', err, {path: item, stats: stats})
-      return self.finishItem()
-    }
-
-    if (!stats.isDirectory()) {
-      self.push({ path: item, stats: stats })
-      return self.finishItem()
-    }
+    if (err) return self.emit('error', err, { path: item, stats: stats })
+    if (!stats.isDirectory()) return self.push({ path: item, stats: stats })
 
     fs.readdir(item, function (err, items) {
-      if (err) {
-        self.emit('error', err, {path: item, stats: stats})
-        return self.finishItem()
-      }
+      if (err) return self.emit('error', err, { path: item, stats: stats })
 
-      self.push({path: item, stats: stats})
       items.forEach(function (part) {
-        self.visit(path.join(item, part))
+        self.paths.push(path.join(item, part))
       })
-      self.finishItem()
+
+      self.push({ path: item, stats: stats })
     })
   })
-  return this
 }
-
-Walker.prototype.finishItem = function () {
-  this.pending -= 1
-  if (this.pending === 0) this.push(null)
-  return this
-}
-
-Walker.prototype._read = function () { }
 
 function walk (path) {
-  return new Walker(path)// .start()
+  return new Walker(path)
 }
 
 module.exports = walk
