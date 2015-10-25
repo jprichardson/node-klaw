@@ -95,30 +95,33 @@ klaw('/some/dir')
 ```
 
 
-### Filtering
+### Aggregation / Filtering / Executing Actions (Through Streams)
 
 On many occasions you may want to filter files based upon size, extension, etc.
+Or you may want to aggregate stats on certain file types. Or maybe you want to
+perform an action on certain file types.
+
 You should use the module [`through2`](https://www.npmjs.com/package/through2) to easily
 accomplish this.
 
-Example (skipping directories):
-
-first:
+Install `through2`:
 
     npm i --save through2
 
 
+**Example (skipping directories):**
+
 ```js
-var fs = require('fs-extra')
+var klaw = require('klaw')
 var through2 = require('through2')
 
 var excludeDirFilter = through2.obj(function (item, enc, next) {
-  if (!item.stat.isDirectory()) this.push(item)
+  if (!item.stats.isDirectory()) this.push(item)
   next()
 })
 
 var items = [] // files, directories, symlinks, etc
-klaw(TEST_DIR)
+klaw('/some/dir')
   .pipe(excludeDirFilter)
   .on('data', function (item) {
     items.push(item.path)
@@ -127,6 +130,79 @@ klaw(TEST_DIR)
     console.dir(items) // => [ ... array of files without directories]
   })
 
+```
+
+
+**Example (totaling size of PNG files):**
+
+```js
+var klaw = require('klaw')
+var path = require('path')
+var through2 = require('through2')
+
+var totalPngsInBytes = 0
+var aggregatePngSize = through2.obj(function (item, enc, next) {
+  if (path.extname(item.path) === 'png') {
+    totalPngsInBytes += item.stats.size
+  }
+  this.push(item)
+  next()
+})
+
+klaw('/some/dir')
+  .pipe(excludeDirFilter)
+  .on('data', function (item) {
+    items.push(item.path)
+  })
+  .on('end', function () {
+    console.dir(totalPngsInBytes) // => total of all pngs (bytes)
+  })
+```
+
+
+**Example (deleting all .tmp files):**
+
+```js
+var fs = require('fs')
+var klaw = require('klaw')
+var through2 = require('through2')
+
+var deleteAction = through2.obj(function (item, enc, next) {
+  this.push(item)
+
+  if (path.extname(item.path) === 'tmp') {
+    item.deleted = true
+    fs.unklink(item.path, next)
+  } else {
+    item.deleted = false
+    next()
+  }  
+})
+
+var deletedFiles = []
+klaw('/some/dir')
+  .pipe(deleteAction)
+  .on('data', function (item) {
+    if (!item.deleted) return
+    deletedFiles.push(item.path)
+  })
+  .on('end', function () {
+    console.dir(deletedFiles) // => all deleted files
+  })
+```
+
+You can even chain a bunch of these filters and aggregators together. By using
+multiple pipes.
+
+**Example (using multiple filters / aggregators):**
+
+```js
+klaw('/some/dir')
+  .pipe(filterCertainFiles)
+  .pipe(deleteSomeOtherFiles)
+  .on('end', function () {
+    console.log('all done!')
+  })
 ```
 
 
