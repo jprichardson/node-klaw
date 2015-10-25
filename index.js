@@ -5,7 +5,7 @@ var util = require('util')
 var assign = require('./assign')
 
 function Walker (dir, streamOptions) {
-  Readable.call(this, assign({ objectMode: true }, streamOptions))
+  Readable.call(this, assign({}, streamOptions, { objectMode: true }))
   this.path = path.resolve(dir)
   this.pending = 0
   this.start()
