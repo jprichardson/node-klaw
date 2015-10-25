@@ -4,10 +4,9 @@ var Readable = require('stream').Readable
 var util = require('util')
 var assign = require('./assign')
 
-function Walker (dir, filter, streamOptions) {
+function Walker (dir, streamOptions) {
   Readable.call(this, assign({ objectMode: true }, streamOptions))
   this.path = path.resolve(dir)
-  this.filter = filter
   this.pending = 0
   this.start()
 }
@@ -27,8 +26,6 @@ Walker.prototype.visit = function (item) {
       self.emit('error', err, {path: item, stats: stats})
       return self.finishItem()
     }
-
-    if (self.filter && !self.filter({path: item, stats: stats})) return self.finishItem()
 
     if (!stats.isDirectory()) {
       self.push({ path: item, stats: stats })
