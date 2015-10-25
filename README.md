@@ -30,7 +30,7 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 `stats` is an instance of [fs.Stats](https://nodejs.org/api/fs.html#fs_class_fs_stats).
 
 - `directory`: The directory to recursively walk. Type `string`.
-- `options`: Right now it's just Readable stream options.
+- `options`: Right now it's just [Readable stream options](https://nodejs.org/api/stream.html#stream_new_stream_readable_options).
 
 **Streams 1 (push) example:**
 
