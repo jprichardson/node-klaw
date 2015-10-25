@@ -1,6 +1,6 @@
 {
   "name": "klaw",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "File system walker with Readable stream interface.",
   "main": "index.js",
   "scripts": {
