@@ -32,7 +32,7 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 - `directory`: The directory to recursively walk. Type `string`.
 - `options`: Right now it's just Readable stream options.
 
-Streams 1 (push) example:
+**Streams 1 (push) example:**
 
 ```js
 var klaw = require('klaw')
@@ -47,7 +47,7 @@ klaw(TEST_DIR)
   })
 ```
 
-Streams 2 & 3 (pull) example:
+**Streams 2 & 3 (pull) example:**
 
 ```js
 var klaw = require('klaw')
