@@ -1,0 +1,30 @@
+{
+  "name": "klaw",
+  "version": "0.0.0",
+  "description": "File system walker with Readable stream interface.",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jprichardson/node-klaw.git"
+  },
+  "keywords": [
+    "walk",
+    "walker",
+    "fs",
+    "fs-extra",
+    "readable",
+    "streams"
+  ],
+  "author": "JP Richardson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jprichardson/node-klaw/issues"
+  },
+  "homepage": "https://github.com/jprichardson/node-klaw#readme",
+  "devDependencies": {
+    "fs-extra": "^0.25.0"
+  }
+}
