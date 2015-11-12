@@ -1,3 +1,7 @@
+1.1.2 / 2015-11-12
+------------------
+- assert that param `dir` is a `string`
+
 1.1.1 / 2015-10-25
 ------------------
 - bug fix, options not being passed
