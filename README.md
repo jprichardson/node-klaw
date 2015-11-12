@@ -153,7 +153,7 @@ var aggregatePngSize = through2.obj(function (item, enc, next) {
 })
 
 klaw('/some/dir')
-  .pipe(excludeDirFilter)
+  .pipe(aggregatePngSize)
   .on('data', function (item) {
     items.push(item.path)
   })
