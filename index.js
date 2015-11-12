@@ -21,20 +21,21 @@ util.inherits(Walker, Readable)
 Walker.prototype._read = function () {
   if (this.paths.length === 0) return this.push(null)
   var self = this
-  var item = this.paths[this.options.queueMethod]()
+  var pathItem = this.paths[this.options.queueMethod]()
 
-  fs.lstat(item, function (err, stats) {
-    if (err) return self.emit('error', err, { path: item, stats: stats })
-    if (!stats.isDirectory()) return self.push({ path: item, stats: stats })
+  fs.lstat(pathItem, function (err, stats) {
+    var item = { path: pathItem, stats: stats }
+    if (err) return self.emit('error', err, item)
+    if (!stats.isDirectory()) return self.push(item)
 
-    fs.readdir(item, function (err, items) {
-      if (err) return self.emit('error', err, { path: item, stats: stats })
+    fs.readdir(pathItem, function (err, pathItems) {
+      if (err) return self.emit('error', err, item)
 
-      items = items.map(function (part) { return path.join(item, part) })
-      if (self.options.pathSorter) items.sort(self.options.pathSorter)
-      items.forEach(function (item) { self.paths.push(item) })
+      pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
+      if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
+      pathItems.forEach(function (pi) { self.paths.push(pi) })
 
-      self.push({ path: item, stats: stats })
+      self.push(item)
     })
   })
 }
