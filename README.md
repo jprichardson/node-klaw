@@ -32,7 +32,7 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 - `directory`: The directory to recursively walk. Type `string`.
 - `options`: [Readable stream options](https://nodejs.org/api/stream.html#stream_new_stream_readable_options) and
 the following:
-  - `queueMethod`: Either `'shift'` or `'pop'`. Type `string`.
+  - `queueMethod`: Either `'shift'` or `'pop'`. Type `string`. Default: `'shift'`.
   - `pathSorter`: Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort). Type `function`.
 
 **Streams 1 (push) example:**
@@ -207,6 +207,33 @@ klaw('/some/dir')
     console.log('all done!')
   })
 ```
+
+**Example passing (piping) through errors:**
+
+Node.js does not `pipe()` errors. This means that the error on one stream, like
+`klaw` will not pipe through to the next. If you want to do this, do the following:
+
+```js
+var klaw = require('klaw')
+var through2 = require('through2')
+
+var excludeDirFilter = through2.obj(function (item, enc, next) {
+  if (!item.stats.isDirectory()) this.push(item)
+  next()
+})
+
+var items = [] // files, directories, symlinks, etc
+klaw('/some/dir')
+  .on('error', function (err) { excludeDirFilter.emit('error', err) }) // forward the error on
+  .pipe(excludeDirFilter)
+  .on('data', function (item) {
+    items.push(item.path)
+  })
+  .on('end', function () {
+    console.dir(items) // => [ ... array of files without directories]
+  })
+```
+
 
 ### Searching Strategy
 
