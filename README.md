@@ -145,7 +145,7 @@ var through2 = require('through2')
 
 var totalPngsInBytes = 0
 var aggregatePngSize = through2.obj(function (item, enc, next) {
-  if (path.extname(item.path) === 'png') {
+  if (path.extname(item.path) === '.png') {
     totalPngsInBytes += item.stats.size
   }
   this.push(item)
@@ -173,7 +173,7 @@ var through2 = require('through2')
 var deleteAction = through2.obj(function (item, enc, next) {
   this.push(item)
 
-  if (path.extname(item.path) === 'tmp') {
+  if (path.extname(item.path) === '.tmp') {
     item.deleted = true
     fs.unklink(item.path, next)
   } else {
