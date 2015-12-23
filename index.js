@@ -29,12 +29,13 @@ Walker.prototype._read = function () {
     if (!stats.isDirectory()) return self.push(item)
 
     fs.readdir(pathItem, function (err, pathItems) {
-      if (err) return self.emit('error', err, item)
-
-      pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
-      if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
-      pathItems.forEach(function (pi) { self.paths.push(pi) })
-
+      if (!err) {
+        pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
+        if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
+        pathItems.forEach(function (pi) { self.paths.push(pi) })
+      } else {
+        self.emit('error', err, item)
+      }
       self.push(item)
     })
   })
@@ -45,3 +46,4 @@ function walk (root, options) {
 }
 
 module.exports = walk
+
