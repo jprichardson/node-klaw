@@ -1,3 +1,7 @@
+1.1.3 / 2015-12-23
+------------------
+- bugfix: if `readdir` error, got hung up. See: https://github.com/jprichardson/node-klaw/issues/1
+
 1.1.2 / 2015-11-12
 ------------------
 - assert that param `dir` is a `string`
