@@ -29,7 +29,10 @@ Walker.prototype._read = function () {
     if (!stats.isDirectory()) return self.push(item)
 
     fs.readdir(pathItem, function (err, pathItems) {
-      if (err) return self.emit('error', err, item)
+      if (err) {
+        self.push(item)
+        return self.emit('error', err, item)
+      }
 
       pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
       if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
