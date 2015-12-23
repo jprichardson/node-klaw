@@ -5,7 +5,7 @@ var Readable = require('stream').Readable
 var util = require('util')
 var assign = require('./assign')
 
-function Walker(dir, options) {
+function Walker (dir, options) {
   assert.strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
   var defaultStreamOptions = { objectMode: true }
   var defaultOpts = { queueMethod: 'shift', pathSorter: undefined }
@@ -34,14 +34,14 @@ Walker.prototype._read = function () {
         if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
         pathItems.forEach(function (pi) { self.paths.push(pi) })
       } else {
-        self.emit('error', err, item);
+        self.emit('error', err, item)
       }
       self.push(item)
     })
   })
 }
 
-function walk(root, options) {
+function walk (root, options) {
   return new Walker(root, options)
 }
 
