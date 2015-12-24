@@ -4,7 +4,7 @@
   "description": "File system walker with Readable stream interface.",
   "main": "index.js",
   "scripts": {
-    "test": "standard && tape tests/**/*.js | faucet"
+    "test": "standard && tape tests/**/*.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/jprichardson/node-klaw#readme",
   "devDependencies": {
-    "faucet": "0.0.1",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.4.3",
     "standard": "^5.3.1",
+    "tap-spec": "^4.1.1",
     "tape": "^4.2.2"
   }
 }

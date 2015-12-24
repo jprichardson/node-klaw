@@ -32,7 +32,7 @@ function test (desc, testFn) {
   })
 }
 
-test('should work w/ streams 1', function (t, testDir) {
+test('walk directory, if error on readdir, at least end', function (t, testDir) {
   t.plan(2)
   var items = []
   klaw(testDir)
