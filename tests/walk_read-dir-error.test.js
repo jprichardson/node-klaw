@@ -15,6 +15,7 @@ function test (desc, testFn) {
       mkdirp(testDir, function (err) {
         if (err) return t.end(err)
 
+        // simulate directory issue
         var unreadableDir = path.join(testDir, 'unreadable-dir')
         mkdirp.sync(unreadableDir)
         fs.chmodSync(unreadableDir, '0222')
@@ -33,6 +34,9 @@ function test (desc, testFn) {
 }
 
 test('walk directory, if error on readdir, at least end', function (t, testDir) {
+  // not able to simulate on windows
+  if (process.platform === 'win32') return t.end()
+
   t.plan(2)
   var items = []
   klaw(testDir)
