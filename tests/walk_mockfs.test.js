@@ -1,5 +1,6 @@
 var mkdirp = require('mkdirp')
 var mockfs = require('mock-fs')
+var os = require('os')
 var path = require('path')
 var test = require('tape')
 var klaw = require('../')
@@ -7,7 +8,7 @@ var fixtures = require('./fixtures')
 var fs = mockfs.fs()
 
 test('walk directory on mockfs', function (t) {
-  var testDir = '/does/not/matter/in/mockfs'
+  var testDir = path.join(os.tmpdir(), '/does/not/matter/in/mockfs')
   fixtures.forEach(function (f) {
     f = path.join(testDir, f)
     var dir = path.dirname(f)
