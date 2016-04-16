@@ -16,13 +16,6 @@ function test (desc, testFn) {
       mkdirp(testDir, function (err) {
         if (err) return t.end(err)
 
-        fixtures.forEach(function (f) {
-          f = path.join(testDir, f)
-          var dir = path.dirname(f)
-          mkdirp.sync(dir)
-          fs.writeFileSync(f, path.basename(f, path.extname(f)))
-        })
-
         var oldEnd = t.end
         t.end = function () {
           rimraf(testDir, function (err) {
@@ -37,6 +30,13 @@ function test (desc, testFn) {
 }
 
 test('should work w/ streams 1', function (t, testDir) {
+  fixtures.forEach(function (f) {
+    f = path.join(testDir, f)
+    var dir = path.dirname(f)
+    mkdirp.sync(dir)
+    fs.writeFileSync(f, path.basename(f, path.extname(f)))
+  })
+
   var items = []
   klaw(testDir)
     .on('data', function (item) {
@@ -58,6 +58,13 @@ test('should work w/ streams 1', function (t, testDir) {
 })
 
 test('should work w/ streams 2/3', function (t, testDir) {
+  fixtures.forEach(function (f) {
+    f = path.join(testDir, f)
+    var dir = path.dirname(f)
+    mkdirp.sync(dir)
+    fs.writeFileSync(f, path.basename(f, path.extname(f)))
+  })
+
   var items = []
   klaw(testDir)
     .on('readable', function () {

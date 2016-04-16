@@ -16,13 +16,6 @@ function test (desc, testFn) {
       mkdirp(testDir, function (err) {
         if (err) return t.end(err)
 
-        fixtures.forEach(function (f) {
-          f = path.join(testDir, f)
-          var dir = path.dirname(f)
-          mkdirp.sync(dir)
-          fs.writeFileSync(f, path.basename(f, path.extname(f)))
-        })
-
         var oldEnd = t.end
         t.end = function () {
           rimraf(testDir, function (err) {
@@ -37,6 +30,13 @@ function test (desc, testFn) {
 }
 
 test('should sort in reverse order [z -> a]', function (t, testDir) {
+  fixtures.forEach(function (f) {
+    f = path.join(testDir, f)
+    var dir = path.dirname(f)
+    mkdirp.sync(dir)
+    fs.writeFileSync(f, path.basename(f, path.extname(f)))
+  })
+
   var items = []
   var pathSorter = function (a, b) { return b > a }
   klaw(testDir, { pathSorter: pathSorter })
@@ -57,6 +57,13 @@ test('should sort in reverse order [z -> a]', function (t, testDir) {
 })
 
 test('should sort in order [a -> z]', function (t, testDir) {
+  fixtures.forEach(function (f) {
+    f = path.join(testDir, f)
+    var dir = path.dirname(f)
+    mkdirp.sync(dir)
+    fs.writeFileSync(f, path.basename(f, path.extname(f)))
+  })
+
   var items = []
   var pathSorter = function (a, b) { return a > b }
   klaw(testDir, { pathSorter: pathSorter })

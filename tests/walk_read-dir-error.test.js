@@ -15,11 +15,6 @@ function test (desc, testFn) {
       mkdirp(testDir, function (err) {
         if (err) return t.end(err)
 
-        // simulate directory issue
-        var unreadableDir = path.join(testDir, 'unreadable-dir')
-        mkdirp.sync(unreadableDir)
-        fs.chmodSync(unreadableDir, '0222')
-
         var oldEnd = t.end
         t.end = function () {
           rimraf(testDir, function (err) {
@@ -34,6 +29,11 @@ function test (desc, testFn) {
 }
 
 test('walk directory, if error on readdir, at least end', function (t, testDir) {
+  // simulate directory issue
+  var unreadableDir = path.join(testDir, 'unreadable-dir')
+  mkdirp.sync(unreadableDir)
+  fs.chmodSync(unreadableDir, '0222')
+
   // not able to simulate on windows
   if (process.platform === 'win32') return t.end()
 
