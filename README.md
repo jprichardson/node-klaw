@@ -34,8 +34,9 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 - `directory`: The directory to recursively walk. Type `string`.
 - `options`: [Readable stream options](https://nodejs.org/api/stream.html#stream_new_stream_readable_options) and
 the following:
-  - `queueMethod`: Either `'shift'` or `'pop'`. Type `string`. Default: `'shift'`.
-  - `pathSorter`: Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort). Type `function`.
+  - `queueMethod` (`string`, default: `'shift'`): Either `'shift'` or `'pop'`. On `readdir()` array, call either `shift()` or `pop()`.
+  - `pathSorter` (`function`, default: `undefined`): Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
+  - `fs` (`object`, default: `require('fs')`): Use this to hook into the `fs` methods or to use [`mock-fs`](https://github.com/tschaub/mock-fs)
 
 **Streams 1 (push) example:**
 
