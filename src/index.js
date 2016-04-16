@@ -15,6 +15,7 @@ function Walker (dir, options) {
   this.root = path.resolve(dir)
   this.paths = [this.root]
   this.options = options
+  this.fs = options.fs || fs // mock-fs
 }
 util.inherits(Walker, Readable)
 
@@ -23,12 +24,12 @@ Walker.prototype._read = function () {
   var self = this
   var pathItem = this.paths[this.options.queueMethod]()
 
-  fs.lstat(pathItem, function (err, stats) {
+  self.fs.lstat(pathItem, function (err, stats) {
     var item = { path: pathItem, stats: stats }
     if (err) return self.emit('error', err, item)
     if (!stats.isDirectory()) return self.push(item)
 
-    fs.readdir(pathItem, function (err, pathItems) {
+    self.fs.readdir(pathItem, function (err, pathItems) {
       if (err) {
         self.push(item)
         return self.emit('error', err, item)
