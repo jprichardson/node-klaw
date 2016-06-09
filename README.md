@@ -38,6 +38,7 @@ the following:
   - `queueMethod` (`string`, default: `'shift'`): Either `'shift'` or `'pop'`. On `readdir()` array, call either `shift()` or `pop()`.
   - `pathSorter` (`function`, default: `undefined`): Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
   - `fs` (`object`, default: `require('fs')`): Use this to hook into the `fs` methods or to use [`mock-fs`](https://github.com/tschaub/mock-fs)
+  - `filter` (`function`, default: `undefined`): Filtering [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
 
 **Streams 1 (push) example:**
 
@@ -138,7 +139,22 @@ klaw('/some/dir')
   })
 
 ```
+**Example (ignore hidden directories):**
+```js
+var klaw = require('klaw')
+var path = require('path')
 
+var filterFunc = function(item){
+  var basename = path.basename(item)
+  return basename === '.' || basename[0] !== '.'
+}
+
+klaw('/some/dir', { filter : filterFunc  })
+  .on('data', function(item){
+    // only items of none hidden folders will reach here
+  })
+    
+```
 
 **Example (totaling size of PNG files):**
 
