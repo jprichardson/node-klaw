@@ -14,6 +14,10 @@ Install
 -------
 
     npm i --save klaw
+    
+If you're using Typescript, we've got [types](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/11492/files):
+
+    npm i --save-dev @types/klaw
 
 
 Name
