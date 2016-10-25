@@ -1,3 +1,8 @@
+1.3.1 / 2016-10-25
+------------------
+### Added
+- `graceful-fs` added as an `optionalDependencies`. Thanks [ryanzim]!
+
 1.3.0 / 2016-06-09
 ------------------
 ### Added
