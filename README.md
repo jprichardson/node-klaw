@@ -22,6 +22,12 @@ Name
 `klaw` is `walk` backwards :p
 
 
+Sync
+----
+
+If you need the same functionality but synchronous, you can use [klaw-sync](https://github.com/mawni/node-klaw-sync).
+
+
 Usage
 -----
 
