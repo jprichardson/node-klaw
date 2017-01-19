@@ -25,7 +25,7 @@ Name
 Sync
 ----
 
-If you need the same functionality but synchronous, you can use [klaw-sync](https://github.com/mawni/node-klaw-sync).
+If you need the same functionality but synchronous, you can use [klaw-sync](https://github.com/manidlou/node-klaw-sync).
 
 
 Usage
