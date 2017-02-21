@@ -205,7 +205,7 @@ var deleteAction = through2.obj(function (item, enc, next) {
 
   if (path.extname(item.path) === '.tmp') {
     item.deleted = true
-    fs.unklink(item.path, next)
+    fs.unlink(item.path, next)
   } else {
     item.deleted = false
     next()
