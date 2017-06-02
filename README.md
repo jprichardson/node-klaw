@@ -13,7 +13,7 @@ Install
 -------
 
     npm i --save klaw
-    
+
 If you're using Typescript, we've got [types](https://github.com/DefinitelyTyped/DefinitelyTyped/pull/11492/files):
 
     npm i --save-dev @types/klaw
@@ -81,10 +81,6 @@ klaw('/some/dir')
     console.dir(items) // => [ ... array of files]
   })
 ```
-
-If you're not sure of the differences on Node.js streams 1, 2, 3 then I'd
-recommend this resource as a good starting point: https://strongloop.com/strongblog/whats-new-io-js-beta-streams3/.
-
 
 ### Error Handling
 
@@ -162,7 +158,7 @@ klaw('/some/dir', { filter : filterFunc  })
   .on('data', function(item){
     // only items of none hidden folders will reach here
   })
-    
+
 ```
 
 **Example (totaling size of PNG files):**
