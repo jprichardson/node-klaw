@@ -1,10 +1,4 @@
 var assert = require('assert')
-var fs
-try {
-  fs = require('graceful-fs')
-} catch (e) {
-  fs = require('fs')
-}
 var path = require('path')
 var Readable = require('stream').Readable
 var util = require('util')
@@ -20,7 +14,7 @@ function Walker (dir, options) {
   this.root = path.resolve(dir)
   this.paths = [this.root]
   this.options = options
-  this.fs = options.fs || fs // mock-fs
+  this.fs = options.fs || require('graceful-fs')
 }
 util.inherits(Walker, Readable)
 
