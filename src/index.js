@@ -2,13 +2,12 @@ var assert = require('assert')
 var path = require('path')
 var Readable = require('stream').Readable
 var util = require('util')
-var assign = require('./assign')
 
 function Walker (dir, options) {
   assert.strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
   var defaultStreamOptions = { objectMode: true }
   var defaultOpts = { queueMethod: 'shift', pathSorter: undefined, filter: undefined }
-  options = assign(defaultOpts, options, defaultStreamOptions)
+  options = Object.assign(defaultOpts, options, defaultStreamOptions)
 
   Readable.call(this, options)
   this.root = path.resolve(dir)
