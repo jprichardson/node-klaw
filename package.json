@@ -31,7 +31,6 @@
   },
   "devDependencies": {
     "mkdirp": "^0.5.1",
-    "mock-fs": "^3.8.0",
     "rimraf": "^2.4.3",
     "standard": "^10.0.2",
     "tap-spec": "^4.1.1",
