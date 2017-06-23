@@ -1,3 +1,11 @@
+2.0.0 / 2017-06-23
+------------------
+
+### Changed
+
+- `graceful-fs` is now a regular dependency, and is always loaded. This should speed up `require` time
+- Dropped support for Node 0.10 & 0.12 and io.js
+
 1.3.1 / 2016-10-25
 ------------------
 ### Added
