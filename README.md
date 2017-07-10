@@ -46,40 +46,34 @@ returns an object with two properties: `path` and `stats`. `path` is the full pa
 the following:
   - `queueMethod` (`string`, default: `'shift'`): Either `'shift'` or `'pop'`. On `readdir()` array, call either `shift()` or `pop()`.
   - `pathSorter` (`function`, default: `undefined`): Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
-  - `fs` (`object`, default: `require('fs')`): Use this to hook into the `fs` methods or to use [`mock-fs`](https://github.com/tschaub/mock-fs)
+  - `fs` (`object`, default: [`graceful-fs`](https://github.com/isaacs/node-graceful-fs)): Use this to hook into the `fs` methods or to use [`mock-fs`](https://github.com/tschaub/mock-fs)
   - `filter` (`function`, default: `undefined`): Filtering [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
 
 **Streams 1 (push) example:**
 
 ```js
-var klaw = require('klaw')
+const klaw = require('klaw')
 
-var items = [] // files, directories, symlinks, etc
+const items = [] // files, directories, symlinks, etc
 klaw('/some/dir')
-  .on('data', function (item) {
-    items.push(item.path)
-  })
-  .on('end', function () {
-    console.dir(items) // => [ ... array of files]
-  })
+  .on('data', item => items.push(item.path))
+  .on('end', () => console.dir(items)) // => [ ... array of files]
 ```
 
 **Streams 2 & 3 (pull) example:**
 
 ```js
-var klaw = require('klaw')
+const klaw = require('klaw')
 
-var items = [] // files, directories, symlinks, etc
+const items = [] // files, directories, symlinks, etc
 klaw('/some/dir')
   .on('readable', function () {
-    var item
+    let item
     while ((item = this.read())) {
       items.push(item.path)
     }
   })
-  .on('end', function () {
-    console.dir(items) // => [ ... array of files]
-  })
+  .on('end', () => console.dir(items)) // => [ ... array of files]
 ```
 
 ### Error Handling
@@ -89,22 +83,20 @@ Listen for the `error` event.
 Example:
 
 ```js
-var klaw = require('klaw')
+const klaw = require('klaw')
+
 klaw('/some/dir')
   .on('readable', function () {
-    var item
+    let item
     while ((item = this.read())) {
       // do something with the file
     }
   })
-  .on('error', function (err, item) {
+  .on('error', (err, item) => {
     console.log(err.message)
     console.log(item.path) // the file the error occurred on
   })
-  .on('end', function () {
-    console.dir(items) // => [ ... array of files]
-  })
-
+  .on('end', () => console.dir(items)) // => [ ... array of files]
 ```
 
 
@@ -125,51 +117,47 @@ Install `through2`:
 **Example (skipping directories):**
 
 ```js
-var klaw = require('klaw')
-var through2 = require('through2')
+const klaw = require('klaw')
+const through2 = require('through2')
 
-var excludeDirFilter = through2.obj(function (item, enc, next) {
+const excludeDirFilter = through2.obj(function (item, enc, next) {
   if (!item.stats.isDirectory()) this.push(item)
   next()
 })
 
-var items = [] // files, directories, symlinks, etc
+const items = [] // files, directories, symlinks, etc
 klaw('/some/dir')
   .pipe(excludeDirFilter)
-  .on('data', function (item) {
-    items.push(item.path)
-  })
-  .on('end', function () {
-    console.dir(items) // => [ ... array of files without directories]
-  })
-
+  .on('data', item => items.push(item.path))
+  .on('end', () => console.dir(items)) // => [ ... array of files without directories]
 ```
-**Example (ignore hidden directories):**
-```js
-var klaw = require('klaw')
-var path = require('path')
 
-var filterFunc = function(item){
-  var basename = path.basename(item)
+**Example (ignore hidden directories):**
+
+```js
+const klaw = require('klaw')
+const path = require('path')
+
+const filterFunc = item => {
+  const basename = path.basename(item)
   return basename === '.' || basename[0] !== '.'
 }
 
-klaw('/some/dir', { filter : filterFunc  })
-  .on('data', function(item){
+klaw('/some/dir', { filter: filterFunc })
+  .on('data', item => {
     // only items of none hidden folders will reach here
   })
-
 ```
 
 **Example (totaling size of PNG files):**
 
 ```js
-var klaw = require('klaw')
-var path = require('path')
-var through2 = require('through2')
+const klaw = require('klaw')
+const path = require('path')
+const through2 = require('through2')
 
-var totalPngsInBytes = 0
-var aggregatePngSize = through2.obj(function (item, enc, next) {
+let totalPngsInBytes = 0
+const aggregatePngSize = through2.obj(function (item, enc, next) {
   if (path.extname(item.path) === '.png') {
     totalPngsInBytes += item.stats.size
   }
@@ -179,23 +167,19 @@ var aggregatePngSize = through2.obj(function (item, enc, next) {
 
 klaw('/some/dir')
   .pipe(aggregatePngSize)
-  .on('data', function (item) {
-    items.push(item.path)
-  })
-  .on('end', function () {
-    console.dir(totalPngsInBytes) // => total of all pngs (bytes)
-  })
+  .on('data', item => items.push(item.path))
+  .on('end', () => console.dir(totalPngsInBytes)) // => total of all pngs (bytes)
 ```
 
 
 **Example (deleting all .tmp files):**
 
 ```js
-var fs = require('fs')
-var klaw = require('klaw')
-var through2 = require('through2')
+const fs = require('fs')
+const klaw = require('klaw')
+const through2 = require('through2')
 
-var deleteAction = through2.obj(function (item, enc, next) {
+const deleteAction = through2.obj(function (item, enc, next) {
   this.push(item)
 
   if (path.extname(item.path) === '.tmp') {
@@ -204,19 +188,17 @@ var deleteAction = through2.obj(function (item, enc, next) {
   } else {
     item.deleted = false
     next()
-  }  
+  }
 })
 
-var deletedFiles = []
+const deletedFiles = []
 klaw('/some/dir')
   .pipe(deleteAction)
-  .on('data', function (item) {
+  .on('data', item => {
     if (!item.deleted) return
     deletedFiles.push(item.path)
   })
-  .on('end', function () {
-    console.dir(deletedFiles) // => all deleted files
-  })
+  .on('end', () => console.dir(deletedFiles)) // => all deleted files
 ```
 
 You can even chain a bunch of these filters and aggregators together. By using
@@ -228,9 +210,7 @@ multiple pipes.
 klaw('/some/dir')
   .pipe(filterCertainFiles)
   .pipe(deleteSomeOtherFiles)
-  .on('end', function () {
-    console.log('all done!')
-  })
+  .on('end', () => console.log('all done!'))
 ```
 
 **Example passing (piping) through errors:**
@@ -239,24 +219,20 @@ Node.js does not `pipe()` errors. This means that the error on one stream, like
 `klaw` will not pipe through to the next. If you want to do this, do the following:
 
 ```js
-var klaw = require('klaw')
-var through2 = require('through2')
+const klaw = require('klaw')
+const through2 = require('through2')
 
-var excludeDirFilter = through2.obj(function (item, enc, next) {
+const excludeDirFilter = through2.obj(function (item, enc, next) {
   if (!item.stats.isDirectory()) this.push(item)
   next()
 })
 
-var items = [] // files, directories, symlinks, etc
+const items = [] // files, directories, symlinks, etc
 klaw('/some/dir')
-  .on('error', function (err) { excludeDirFilter.emit('error', err) }) // forward the error on
+  .on('error', err => excludeDirFilter.emit('error', err)) // forward the error on
   .pipe(excludeDirFilter)
-  .on('data', function (item) {
-    items.push(item.path)
-  })
-  .on('end', function () {
-    console.dir(items) // => [ ... array of files without directories]
-  })
+  .on('data', item => items.push(item.path))
+  .on('end', () => console.dir(items)) // => [ ... array of files without directories]
 ```
 
 
