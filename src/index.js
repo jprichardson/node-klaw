@@ -6,13 +6,14 @@ var util = require('util')
 function Walker (dir, options) {
   assert.strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
   var defaultStreamOptions = { objectMode: true }
-  var defaultOpts = { queueMethod: 'shift', pathSorter: undefined, filter: undefined }
+  var defaultOpts = { queueMethod: 'shift', pathSorter: undefined, filter: undefined, depthLimit: undefined }
   options = Object.assign(defaultOpts, options, defaultStreamOptions)
 
   Readable.call(this, options)
   this.root = path.resolve(dir)
   this.paths = [this.root]
   this.options = options
+  if (options.depthLimit > -1) this.rootDepth = this.root.split(path.sep).length + 1
   this.fs = options.fs || require('graceful-fs')
 }
 util.inherits(Walker, Readable)
@@ -25,7 +26,11 @@ Walker.prototype._read = function () {
   self.fs.lstat(pathItem, function (err, stats) {
     var item = { path: pathItem, stats: stats }
     if (err) return self.emit('error', err, item)
-    if (!stats.isDirectory()) return self.push(item)
+
+    if (!stats.isDirectory() || (self.rootDepth &&
+      pathItem.split(path.sep).length - self.rootDepth >= self.options.depthLimit)) {
+      return self.push(item)
+    }
 
     self.fs.readdir(pathItem, function (err, pathItems) {
       if (err) {
