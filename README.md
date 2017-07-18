@@ -238,7 +238,7 @@ klaw('/some/dir')
 
 ### Searching Strategy
 
-Pass in options for `queueMethod` and `pathSorter` to affect how the file system
+Pass in options for `queueMethod`, `pathSorter`, and `depthLimit` to affect how the file system
 is recursively iterated. See the code for more details, it's less than 50 lines :)
 
 
