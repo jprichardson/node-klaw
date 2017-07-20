@@ -26,26 +26,21 @@ Walker.prototype._read = function () {
   self.fs.lstat(pathItem, function (err, stats) {
     var item = { path: pathItem, stats: stats }
     if (err) return self.emit('error', err, item)
-    if (!stats.isDirectory()) return self.push(item)
+
+    if (!stats.isDirectory() || (self.rootDepth &&
+      pathItem.split(path.sep).length - (self.rootDepth + 1) >= self.options.depthLimit)) {
+      return self.push(item)
+    }
 
     self.fs.readdir(pathItem, function (err, pathItems) {
       if (err) {
-        self.push(item)
         return self.emit('error', err, item)
       }
 
       pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
       if (self.options.filter) pathItems = pathItems.filter(self.options.filter)
       if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
-      pathItems.forEach(function (pi) {
-        // Only add paths to the list that are <= depthLimit
-        if (self.rootDepth) {
-          var currentDepth = pi.split(path.sep).length - self.rootDepth - 1
-          if (currentDepth <= self.options.depthLimit) {
-            self.paths.push(pi)
-          }
-        } else self.paths.push(pi)
-      })
+      pathItems.forEach(function (pi) { self.paths.push(pi) })
 
       self.push(item)
     })
