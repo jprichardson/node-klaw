@@ -48,6 +48,7 @@ the following:
   - `pathSorter` (`function`, default: `undefined`): Sorting [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort).
   - `fs` (`object`, default: [`graceful-fs`](https://github.com/isaacs/node-graceful-fs)): Use this to hook into the `fs` methods or to use [`mock-fs`](https://github.com/tschaub/mock-fs)
   - `filter` (`function`, default: `undefined`): Filtering [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
+  - `depthLimit` (`number`, default: `undefined`): The number of times to recurse before stopping. -1 for unlimited.
 
 **Streams 1 (push) example:**
 
@@ -238,7 +239,7 @@ klaw('/some/dir')
 
 ### Searching Strategy
 
-Pass in options for `queueMethod` and `pathSorter` to affect how the file system
+Pass in options for `queueMethod`, `pathSorter`, and `depthLimit` to affect how the file system
 is recursively iterated. See the code for more details, it's less than 50 lines :)
 
 
