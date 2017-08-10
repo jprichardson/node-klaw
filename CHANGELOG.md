@@ -1,3 +1,10 @@
+2.1.0 / 2017-08-10
+------------------
+
+### Added
+
+- Added `depthLimit` option to limit how deep to recurse into folders. [#25](https://github.com/jprichardson/node-klaw/pull/25)
+
 2.0.0 / 2017-06-23
 ------------------
 
