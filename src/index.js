@@ -41,7 +41,7 @@ Walker.prototype._read = function () {
       pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
       if (self.options.filter) pathItems = pathItems.filter(self.options.filter)
       if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
-      self.paths.push.apply(zelf, pathItems);
+      self.paths.push.apply(zelf.paths, pathItems);
 
       self.push(item)
     })
