@@ -1,3 +1,8 @@
+2.1.1 / 2017-11-18
+------------------
+
+- Performance optimization [#27](https://github.com/jprichardson/node-klaw/pull/27)
+
 2.1.0 / 2017-08-10
 ------------------
 
