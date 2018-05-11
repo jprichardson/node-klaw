@@ -58,7 +58,7 @@ const klaw = require('klaw')
 const items = [] // files, directories, symlinks, etc
 klaw('/some/dir')
   .on('data', item => items.push(item.path))
-  .on('end', () => console.dir(items)) // => [ ... array of files]
+  .on('end', (items) => console.dir(items)) // => [ ... array of files]
 ```
 
 **Streams 2 & 3 (pull) example:**
@@ -97,7 +97,7 @@ klaw('/some/dir')
     console.log(err.message)
     console.log(item.path) // the file the error occurred on
   })
-  .on('end', () => console.dir(items)) // => [ ... array of files]
+  .on('end', (items) => console.dir(items)) // => [ ... array of files]
 ```
 
 
@@ -130,7 +130,7 @@ const items = [] // files, directories, symlinks, etc
 klaw('/some/dir')
   .pipe(excludeDirFilter)
   .on('data', item => items.push(item.path))
-  .on('end', () => console.dir(items)) // => [ ... array of files without directories]
+  .on('end', (items) => console.dir(items)) // => [ ... array of files without directories]
 ```
 
 **Example (ignore hidden directories):**
