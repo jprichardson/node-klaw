@@ -74,7 +74,7 @@ klaw('/some/dir')
       items.push(item.path)
     }
   })
-  .on('end', () => console.dir(items)) // => [ ... array of files]
+  .on('end', (items) => console.dir(items)) // => [ ... array of files]
 ```
 
 ### Error Handling
