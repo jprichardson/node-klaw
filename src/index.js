@@ -23,7 +23,9 @@ Walker.prototype._read = function () {
   var self = this
   var pathItem = this.paths[this.options.queueMethod]()
 
-  self.fs.lstat(pathItem, function (err, stats) {
+  var statFunction = this.options.followLinks ? self.fs.stat : self.fs.lstat
+
+  statFunction(pathItem, function (err, stats) {
     var item = { path: pathItem, stats: stats }
     if (err) return self.emit('error', err, item)
 

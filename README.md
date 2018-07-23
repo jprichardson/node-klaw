@@ -49,6 +49,7 @@ the following:
   - `fs` (`object`, default: [`graceful-fs`](https://github.com/isaacs/node-graceful-fs)): Use this to hook into the `fs` methods or to use [`mock-fs`](https://github.com/tschaub/mock-fs)
   - `filter` (`function`, default: `undefined`): Filtering [function for Arrays](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter)
   - `depthLimit` (`number`, default: `undefined`): The number of times to recurse before stopping. -1 for unlimited.
+  - `followLinks` (`boolean`, default: `false`): Whether symlinks should be followed. If false, symlinks will be returned as items in their own right. If true, the linked item will be returned, and potentially recursed into, in its stead.
 
 **Streams 1 (push) example:**
 
