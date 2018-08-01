@@ -1,0 +1,5 @@
+{
+  "a/b.txt": { },
+  "b": { "type": "file", "target": "./a/b.txt" },
+  "c": { "type": "dir", "target": "./a" }
+}

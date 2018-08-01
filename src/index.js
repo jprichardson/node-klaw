@@ -6,7 +6,13 @@ var util = require('util')
 function Walker (dir, options) {
   assert.strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
   var defaultStreamOptions = { objectMode: true }
-  var defaultOpts = { queueMethod: 'shift', pathSorter: undefined, filter: undefined, depthLimit: undefined }
+  var defaultOpts = {
+    queueMethod: 'shift',
+    pathSorter: undefined,
+    filter: undefined,
+    depthLimit: undefined,
+    preserveSymlinks: false
+  }
   options = Object.assign(defaultOpts, options, defaultStreamOptions)
 
   Readable.call(this, options)
@@ -23,7 +29,9 @@ Walker.prototype._read = function () {
   var self = this
   var pathItem = this.paths[this.options.queueMethod]()
 
-  self.fs.lstat(pathItem, function (err, stats) {
+  var statFunction = this.options.preserveSymlinks ? self.fs.lstat : self.fs.stat
+
+  statFunction(pathItem, function (err, stats) {
     var item = { path: pathItem, stats: stats }
     if (err) return self.emit('error', err, item)
 
