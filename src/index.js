@@ -11,7 +11,7 @@ function Walker (dir, options) {
     pathSorter: undefined,
     filter: undefined,
     depthLimit: undefined,
-    preserveSymlinks: true
+    preserveSymlinks: false
   }
   options = Object.assign(defaultOpts, options, defaultStreamOptions)
 
