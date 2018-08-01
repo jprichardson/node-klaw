@@ -47,7 +47,7 @@ test('should follow links if requested', function (t, testDir) {
   loadLinkFixtures(testDir)
 
   var items = []
-  klaw(testDir, { followLinks: true })
+  klaw(testDir, { preserveSymlinks: false })
     .on('data', function (item) {
       items.push(item.path)
     })
