@@ -1,3 +1,9 @@
+3.0.0 / 2018-08-01
+------------------
+
+- **BREAKING:** Follow symlinks by default (use the new `preserveSymlinks` option to get the old behavior) [#29](https://github.com/jprichardson/node-klaw/pull/29)
+- **BREAKING:** Drop Node v4 support
+
 2.1.1 / 2017-11-18
 ------------------
 
