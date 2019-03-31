@@ -1,5 +1,6 @@
 {
   "a/b.txt": { },
   "b": { "type": "file", "target": "./a/b.txt" },
-  "c": { "type": "dir", "target": "./a" }
+  "c": { "type": "dir", "target": "./a" },
+  "d": { "type": "file", "target": "./broken" }
 }
