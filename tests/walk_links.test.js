@@ -14,7 +14,16 @@ function loadLinkFixtures (testDir) {
     mkdirp.sync(dir)
 
     if (link.target) {
+      let realTarget = path.resolve(testDir, link.target)
+      let missing
+      if (!fs.existsSync(realTarget)) {
+        missing = true
+        fs.writeFileSync(realTarget, '')
+      }
       fs.symlinkSync(link.target, f, link.type)
+      if (missing) {
+        fs.unlinkSync(realTarget)
+      }
     } else {
       fs.writeFileSync(f, path.basename(f, path.extname(f)))
     }
@@ -54,7 +63,7 @@ test('should not follow links if requested', function (t, testDir) {
     .on('error', t.end)
     .on('end', function () {
       items.sort()
-      var expected = ['a', 'a/b.txt', 'b', 'c']
+      var expected = ['a', 'a/b.txt', 'b', 'c', 'd']
       expected = expected.map(function (item) {
         return path.join(path.join(testDir, item))
       })
