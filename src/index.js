@@ -112,7 +112,7 @@ Walker.prototype._read = _asyncToGenerator(function* () {
       pushResult = yield this._readPath(pathItem)
     }
   } catch (err) {
-    self.emit('error', err, { path: pathItem });
+    this.emit('error', err, { path: pathItem });
   }
 })
 
