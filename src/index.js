@@ -28,11 +28,11 @@ function _asyncToGenerator(fn) {
       var gen = fn.apply(self, args)
 
       function _next(value) {
-	asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'next', value)
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'next', value)
       }
 
       function _throw(err) {
-	asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'throw', err)
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, 'throw', err)
       }
 
       _next(undefined)
@@ -77,7 +77,7 @@ Walker.prototype._readPath = function () {
       }
 
       if (!stats.isDirectory() || self.rootDepth &&
-	  pathItem.split(path.sep).length - self.rootDepth >= self.options.depthLimit) {
+          pathItem.split(path.sep).length - self.rootDepth >= self.options.depthLimit) {
         return self.push(item)
       }
 
