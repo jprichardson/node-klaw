@@ -41,7 +41,7 @@ function _asyncToGenerator (fn) {
   }
 }
 
-function Walker(dir, options) {
+function Walker (dir, options) {
   assert.strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
   var defaultStreamOptions = { objectMode: true }
   var defaultOpts = {
@@ -59,14 +59,13 @@ function Walker(dir, options) {
   this.options = options
   if (options.depthLimit > -1) this.rootDepth = this.root.split(path.sep).length + 1
   this.fs = options.fs || require('graceful-fs')
-  this._inFlight = 0;
+  this._inFlight = 0
 }
 
 util.inherits(Walker, Readable)
 
 Walker.prototype._readPath = (function () {
   var _ref = _asyncToGenerator(function * (pathItem) {
-    const id = Math.random();
     var statFunction = this.options.preserveSymlinks ? this.fs.lstat : this.fs.stat
     var self = this
 
@@ -100,8 +99,7 @@ Walker.prototype._readPath = (function () {
           self.paths.push.apply(self.paths, pathItems)
 
           resolve(self.push(item))
-          return
-        });
+        })
       })
     })
   })
@@ -115,22 +113,22 @@ Walker.prototype._read = _asyncToGenerator(function * () {
   let pushResult
 
   if (this._inFlight > 0) {
-    return;
+    return
   }
 
   try {
     while (this.paths.length > 0 && pushResult !== false) {
       var pathItem = this.paths[this.options.queueMethod]()
-      this._inFlight += 1;
+      this._inFlight += 1
       pushResult = yield this._readPath(pathItem).then((result) => {
         this._inFlight -= 1
 
         if (this.paths.length === 0 && this._inFlight === 0) {
-          this.push(null);
+          this.push(null)
         }
 
         return result
-      });
+      })
     }
   } catch (err) {
     this.emit('error', err, { path: pathItem })
