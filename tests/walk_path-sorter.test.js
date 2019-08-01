@@ -5,6 +5,12 @@ var test = require('./_test')
 var klaw = require('../')
 var fixtures = require('./fixtures_path-sorter')
 
+var stringCompare = function (a, b) {
+  if (a < b) return -1
+  else if (a > b) return 1
+  else return 0
+}
+
 test('should sort in reverse order [z -> a]', function (t, testDir) {
   fixtures.forEach(function (f) {
     f = path.join(testDir, f)
@@ -14,7 +20,7 @@ test('should sort in reverse order [z -> a]', function (t, testDir) {
   })
 
   var items = []
-  var pathSorter = function (a, b) { return b > a }
+  var pathSorter = function (a, b) { return stringCompare(b, a) }
   klaw(testDir, { pathSorter: pathSorter })
     .on('data', function (item) {
       items.push(item.path)
@@ -41,7 +47,7 @@ test('should sort in order [a -> z]', function (t, testDir) {
   })
 
   var items = []
-  var pathSorter = function (a, b) { return a > b }
+  var pathSorter = function (a, b) { return stringCompare(a, b) }
   klaw(testDir, { pathSorter: pathSorter })
     .on('data', function (item) {
       items.push(item.path)
