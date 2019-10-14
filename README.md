@@ -78,6 +78,14 @@ klaw('/some/dir')
   .on('end', () => console.dir(items)) // => [ ... array of files]
 ```
 
+**```for-await-of```**
+
+```js
+for await (const file of klaw(''/some/dir'')){
+    console.log(file);
+}
+```
+
 ### Error Handling
 
 Listen for the `error` event.
