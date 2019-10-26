@@ -81,8 +81,8 @@ klaw('/some/dir')
 **```for-await-of```**
 
 ```js
-for await (const file of klaw(''/some/dir'')){
-    console.log(file);
+for await (const file of klaw('/some/dir')) {
+  console.log(file)
 }
 ```
 
