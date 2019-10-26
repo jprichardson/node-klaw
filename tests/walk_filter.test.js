@@ -18,7 +18,7 @@ test('should not fire event on filtered items', function (t, testDir) {
     return path.basename(filepath) !== 'a'
   }
 
-  klaw(testDir, {filter: filter})
+  klaw(testDir, { filter: filter })
     .on('data', function (item) {
       if (fs.lstatSync(item.path).isFile()) items.push(item.path)
     })
