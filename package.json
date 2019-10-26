@@ -4,7 +4,7 @@
   "description": "File system walker with Readable stream interface.",
   "main": "./src/index.js",
   "scripts": {
-    "lint": "standard && standard-markdown",
+    "lint": "standard",
     "test": "npm run lint && npm run unit",
     "unit": "tape tests/**/*.js | tap-spec"
   },
@@ -32,8 +32,7 @@
   "devDependencies": {
     "mkdirp": "^0.5.1",
     "rimraf": "^2.4.3",
-    "standard": "^11.0.1",
-    "standard-markdown": "^4.0.1",
+    "standard": "^14.3.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.2.2"
   }
