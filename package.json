@@ -33,7 +33,7 @@
     "mkdirp": "^0.5.1",
     "rimraf": "^2.4.3",
     "standard": "^11.0.1",
-    "standard-markdown": "^4.0.1",
+    "standard-markdown": "^5.0.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.2.2"
   }
