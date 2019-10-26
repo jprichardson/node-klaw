@@ -78,7 +78,7 @@ klaw('/some/dir')
   .on('end', () => console.dir(items)) // => [ ... array of files]
 ```
 
-**```for-await-of```**
+**```for-await-of``` example:**
 
 ```js
 for await (const file of klaw('/some/dir')) {
