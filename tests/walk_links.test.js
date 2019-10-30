@@ -14,7 +14,7 @@ function loadLinkFixtures (testDir) {
     mkdirp.sync(dir)
 
     if (link.target) {
-      let realTarget = path.resolve(testDir, link.target)
+      const realTarget = path.resolve(testDir, link.target)
       let missing
       if (!fs.existsSync(realTarget)) {
         missing = true
