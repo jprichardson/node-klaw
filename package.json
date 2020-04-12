@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/jprichardson/node-klaw#readme",
   "dependencies": {
-    "graceful-fs": "^4.1.9"
+    "graceful-fs": "^4.1.15"
   },
   "devDependencies": {
     "mkdirp": "^0.5.1",
