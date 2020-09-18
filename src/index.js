@@ -50,7 +50,7 @@ Walker.prototype._read = function () {
       if (self.options.filter) pathItems = pathItems.filter(self.options.filter)
       if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
       // faster way to do do incremental batch array pushes
-      self.paths.push.apply(self.paths, pathItems)
+      self.paths = self.paths.concat(pathItems)
 
       self.push(item)
     })
