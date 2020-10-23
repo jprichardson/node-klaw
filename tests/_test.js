@@ -10,17 +10,16 @@ function test (desc, testFn) {
     var testDir = path.join(os.tmpdir(), 'klaw-tests')
     rimraf(testDir, function (err) {
       if (err) return t.end(err)
-      mkdirp(testDir, function (err) {
-        if (err) return t.end(err)
-
+      mkdirp(testDir).then(() => {
         var oldEnd = t.end
         t.end = function () {
           rimraf(testDir, function (err) {
             err ? oldEnd.apply(t, [err]) : oldEnd.apply(t, arguments)
           })
         }
-
         testFn(t, testDir)
+      }).catch((err) => {
+        return t.end(err)
       })
     })
   })

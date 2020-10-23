@@ -30,7 +30,7 @@
     "graceful-fs": "^4.1.9"
   },
   "devDependencies": {
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.3",
     "rimraf": "^2.4.3",
     "standard": "^14.3.1",
     "tap-spec": "^5.0.0",
