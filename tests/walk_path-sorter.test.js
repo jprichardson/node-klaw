@@ -1,11 +1,10 @@
-var fs = require('fs')
-var mkdirp = require('mkdirp')
-var path = require('path')
-var test = require('./_test')
-var klaw = require('../')
-var fixtures = require('./fixtures_path-sorter')
+const fs = require('fs')
+const path = require('path')
+const test = require('./_test')
+const klaw = require('../')
+const fixtures = require('./fixtures_path-sorter.json')
 
-var stringCompare = function (a, b) {
+const stringCompare = function (a, b) {
   if (a < b) return -1
   else if (a > b) return 1
   else return 0
@@ -14,20 +13,20 @@ var stringCompare = function (a, b) {
 test('should sort in reverse order [z -> a]', function (t, testDir) {
   fixtures.forEach(function (f) {
     f = path.join(testDir, f)
-    var dir = path.dirname(f)
-    mkdirp.sync(dir)
+    const dir = path.dirname(f)
+    fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(f, path.basename(f, path.extname(f)))
   })
 
-  var items = []
-  var pathSorter = function (a, b) { return stringCompare(b, a) }
+  const items = []
+  const pathSorter = function (a, b) { return stringCompare(b, a) }
   klaw(testDir, { pathSorter: pathSorter })
     .on('data', function (item) {
       items.push(item.path)
     })
     .on('error', t.end)
     .on('end', function () {
-      var expected = ['c', 'b', 'a']
+      let expected = ['c', 'b', 'a']
       expected = expected.map(function (item) {
         return path.join(testDir, item)
       })
@@ -41,20 +40,20 @@ test('should sort in reverse order [z -> a]', function (t, testDir) {
 test('should sort in order [a -> z]', function (t, testDir) {
   fixtures.forEach(function (f) {
     f = path.join(testDir, f)
-    var dir = path.dirname(f)
-    mkdirp.sync(dir)
+    const dir = path.dirname(f)
+    fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(f, path.basename(f, path.extname(f)))
   })
 
-  var items = []
-  var pathSorter = function (a, b) { return stringCompare(a, b) }
+  const items = []
+  const pathSorter = function (a, b) { return stringCompare(a, b) }
   klaw(testDir, { pathSorter: pathSorter })
     .on('data', function (item) {
       items.push(item.path)
     })
     .on('error', t.end)
     .on('end', function () {
-      var expected = ['a', 'b', 'c']
+      let expected = ['a', 'b', 'c']
       expected = expected.map(function (item) {
         return path.join(testDir, item)
       })

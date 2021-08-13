@@ -1,62 +1,70 @@
-var assert = require('assert')
-var path = require('path')
-var Readable = require('stream').Readable
-var util = require('util')
+const { strictEqual } = require('assert')
+const path = require('path')
+const fs = require('fs')
+const { Readable } = require('stream')
 
-function Walker (dir, options) {
-  assert.strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
-  var defaultStreamOptions = { objectMode: true }
-  var defaultOpts = {
-    queueMethod: 'shift',
-    pathSorter: undefined,
-    filter: undefined,
-    depthLimit: undefined,
-    preserveSymlinks: false
-  }
-  options = Object.assign(defaultOpts, options, defaultStreamOptions)
-
-  Readable.call(this, options)
-  this.root = path.resolve(dir)
-  this.paths = [this.root]
-  this.options = options
-  if (options.depthLimit > -1) this.rootDepth = this.root.split(path.sep).length + 1
-  this.fs = options.fs || require('graceful-fs')
-}
-util.inherits(Walker, Readable)
-
-Walker.prototype._read = function () {
-  if (this.paths.length === 0) return this.push(null)
-  var self = this
-  var pathItem = this.paths[this.options.queueMethod]()
-
-  var statFunction = this.options.preserveSymlinks ? self.fs.lstat : self.fs.stat
-
-  statFunction(pathItem, function (err, stats) {
-    var item = { path: pathItem, stats: stats }
-    if (err) return self.emit('error', err, item)
-
-    if (!stats.isDirectory() || (self.rootDepth &&
-      pathItem.split(path.sep).length - self.rootDepth >= self.options.depthLimit)) {
-      return self.push(item)
+class Walker extends Readable {
+  /**
+   * @param {string} dir
+   * @param {Object} options
+   */
+  constructor (dir, options) {
+    strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
+    options = {
+      queueMethod: 'shift',
+      pathSorter: undefined,
+      filter: undefined,
+      depthLimit: undefined,
+      preserveSymlinks: false,
+      ...options,
+      objectMode: true
     }
 
-    self.fs.readdir(pathItem, function (err, pathItems) {
-      if (err) {
-        self.push(item)
-        return self.emit('error', err, item)
+    super(options)
+    this.root = path.resolve(dir)
+    this.paths = [this.root]
+    this.options = options
+    if (options.depthLimit > -1) { this.rootDepth = this.root.split(path.sep).length + 1 }
+    this.fs = options.fs || fs
+  }
+
+  _read () {
+    if (this.paths.length === 0) { return this.push(null) }
+    const pathItem = this.paths[this.options.queueMethod]()
+
+    const statFunction = this.options.preserveSymlinks ? this.fs.lstat : this.fs.stat
+
+    statFunction(pathItem, (err, stats) => {
+      const item = { path: pathItem, stats: stats }
+      if (err) { return this.emit('error', err, item) }
+
+      if (!stats.isDirectory() || (this.rootDepth &&
+        pathItem.split(path.sep).length - this.rootDepth >= this.options.depthLimit)) {
+        return this.push(item)
       }
 
-      pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
-      if (self.options.filter) pathItems = pathItems.filter(self.options.filter)
-      if (self.options.pathSorter) pathItems.sort(self.options.pathSorter)
-      // faster way to do do incremental batch array pushes
-      self.paths.push.apply(self.paths, pathItems)
+      this.fs.readdir(pathItem, (err, pathItems) => {
+        if (err) {
+          this.push(item)
+          return this.emit('error', err, item)
+        }
 
-      self.push(item)
+        pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
+        if (this.options.filter) { pathItems = pathItems.filter(this.options.filter) }
+        if (this.options.pathSorter) { pathItems.sort(this.options.pathSorter) }
+        // faster way to do do incremental batch array pushes
+        this.paths.push.apply(this.paths, pathItems)
+
+        this.push(item)
+      })
     })
-  })
+  }
 }
 
+/**
+ * @param {string} root
+ * @param {Object} [options]
+ */
 function walk (root, options) {
   return new Walker(root, options)
 }
