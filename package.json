@@ -16,7 +16,6 @@
     "walk",
     "walker",
     "fs",
-    "fs-extra",
     "readable",
     "streams"
   ],
@@ -26,14 +25,10 @@
     "url": "https://github.com/jprichardson/node-klaw/issues"
   },
   "homepage": "https://github.com/jprichardson/node-klaw#readme",
-  "dependencies": {
-    "graceful-fs": "^4.1.9"
-  },
   "devDependencies": {
-    "mkdirp": "^0.5.1",
-    "rimraf": "^2.4.3",
-    "standard": "^14.3.1",
+    "@types/node": "^16.6.1",
+    "standard": "^16.0.3",
     "tap-spec": "^5.0.0",
-    "tape": "^4.2.2"
+    "tape": "^5.3.1"
   }
 }

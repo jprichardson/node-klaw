@@ -1,20 +1,20 @@
-var fs = require('fs')
-var mkdirp = require('mkdirp')
-var path = require('path')
-var test = require('./_test')
-var klaw = require('../')
+const fs = require('fs')
+const path = require('path')
+const test = require('./_test')
+const klaw = require('../')
 
 test('walk directory, if error on readdir, at least end', function (t, testDir) {
   // simulate directory issue
-  var unreadableDir = path.join(testDir, 'unreadable-dir')
-  mkdirp.sync(unreadableDir)
+  const unreadableDir = path.join(testDir, 'unreadable-dir')
+
+  fs.mkdirSync(unreadableDir, { recursive: true })
   fs.chmodSync(unreadableDir, '0222')
 
   // not able to simulate on windows
   if (process.platform === 'win32') return t.end()
 
   t.plan(2)
-  var items = []
+  const items = []
   klaw(testDir)
     .on('data', function (item) {
       items.push(item.path)

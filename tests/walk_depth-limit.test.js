@@ -1,34 +1,33 @@
-var fs = require('fs')
-var mkdirp = require('mkdirp')
-var path = require('path')
-var test = require('./_test')
-var klaw = require('../')
-var fixtures = require('./fixtures')
+const fs = require('fs')
+const path = require('path')
+const test = require('./_test')
+const klaw = require('../')
+const fixtures = require('./fixtures.json')
 
 test('should honor depthLimit option -1', function (t, testDir) {
-  var expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i',
+  const expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i',
     'h/i/j', 'h/i/j/k.txt', 'h/i/l.txt', 'h/i/m.jpg']
   run(t, testDir, -1, expected)
 })
 
 test('should honor depthLimit option 0', function (t, testDir) {
-  var expected = ['a', 'h']
+  const expected = ['a', 'h']
   run(t, testDir, 0, expected)
 })
 
 test('should honor depthLimit option 1', function (t, testDir) {
-  var expected = ['a', 'a/b', 'a/e.jpg', 'h', 'h/i']
+  const expected = ['a', 'a/b', 'a/e.jpg', 'h', 'h/i']
   run(t, testDir, 1, expected)
 })
 
 test('should honor depthLimit option 2', function (t, testDir) {
-  var expected = ['a', 'a/b', 'a/b/c', 'a/e.jpg', 'h', 'h/i', 'h/i/j',
+  const expected = ['a', 'a/b', 'a/b/c', 'a/e.jpg', 'h', 'h/i', 'h/i/j',
     'h/i/l.txt', 'h/i/m.jpg']
   run(t, testDir, 2, expected)
 })
 
 test('should honor depthLimit option 3', function (t, testDir) {
-  var expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i',
+  const expected = ['a', 'a/b', 'a/b/c', 'a/b/c/d.txt', 'a/e.jpg', 'h', 'h/i',
     'h/i/j', 'h/i/j/k.txt', 'h/i/l.txt', 'h/i/m.jpg']
   run(t, testDir, 3, expected)
 })
@@ -36,12 +35,12 @@ test('should honor depthLimit option 3', function (t, testDir) {
 function run (t, testDir, depthLimit, expected) {
   fixtures.forEach(function (f) {
     f = path.join(testDir, f)
-    var dir = path.dirname(f)
-    mkdirp.sync(dir)
+    const dir = path.dirname(f)
+    fs.mkdirSync(dir, { recursive: true })
     fs.writeFileSync(f, path.basename(f, path.extname(f)))
   })
 
-  var items = []
+  const items = []
   klaw(testDir, { depthLimit: depthLimit })
     .on('data', function (item) {
       items.push(item.path)
