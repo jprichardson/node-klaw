@@ -19,6 +19,9 @@
     "readable",
     "streams"
   ],
+  "engines": {
+    "node": ">=14.14.0"
+  },
   "author": "JP Richardson",
   "license": "MIT",
   "bugs": {
