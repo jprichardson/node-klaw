@@ -24,6 +24,9 @@
   },
   "author": "JP Richardson",
   "license": "MIT",
+  "files": [
+    "src/"
+  ],
   "bugs": {
     "url": "https://github.com/jprichardson/node-klaw/issues"
   },
