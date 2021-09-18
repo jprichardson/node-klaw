@@ -1,3 +1,10 @@
+4.0.0 / 2021-09-18
+------------------
+
+- **BREAKING:** Require Node 14.14.0+ ([#43](https://github.com/jprichardson/node-klaw/pull/43))
+- **BREAKING:** Remove graceful-fs dependency; install it manually and pass it as `fs` option if needed ([#43](https://github.com/jprichardson/node-klaw/pull/43))
+- Additional documentation examples ([#34](https://github.com/jprichardson/node-klaw/pull/34))
+
 3.0.0 / 2018-08-01
 ------------------
 
