@@ -29,7 +29,6 @@
   },
   "homepage": "https://github.com/jprichardson/node-klaw#readme",
   "devDependencies": {
-    "@types/node": "^16.6.1",
     "standard": "^16.0.3",
     "tap-spec": "^5.0.0",
     "tape": "^5.3.1"
