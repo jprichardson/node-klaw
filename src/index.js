@@ -16,15 +16,17 @@ class Walker extends Readable {
       filter: undefined,
       depthLimit: undefined,
       preserveSymlinks: false,
+      pathCustom: undefined,
       ...options,
       objectMode: true
     }
 
     super(options)
-    this.root = path.resolve(dir)
+    this.pathCustom = options.pathCustom || path
+    this.root = this.pathCustom.resolve(dir)
     this.paths = [this.root]
     this.options = options
-    if (options.depthLimit > -1) { this.rootDepth = this.root.split(path.sep).length + 1 }
+    if (options.depthLimit > -1) { this.rootDepth = this.root.split(this.pathCustom.sep).length + 1 }
     this.fs = options.fs || fs
   }
 
@@ -39,7 +41,7 @@ class Walker extends Readable {
       if (err) { return this.emit('error', err, item) }
 
       if (!stats.isDirectory() || (this.rootDepth &&
-        pathItem.split(path.sep).length - this.rootDepth >= this.options.depthLimit)) {
+        pathItem.split(this.pathCustom.sep).length - this.rootDepth >= this.options.depthLimit)) {
         return this.push(item)
       }
 
@@ -48,8 +50,9 @@ class Walker extends Readable {
           this.push(item)
           return this.emit('error', err, item)
         }
+        const pathCustom = this.pathCustom;
 
-        pathItems = pathItems.map(function (part) { return path.join(pathItem, part) })
+        pathItems = pathItems.map(function (part) { return pathCustom.join(pathItem, part) })
         if (this.options.filter) { pathItems = pathItems.filter(this.options.filter) }
         if (this.options.pathSorter) { pathItems.sort(this.options.pathSorter) }
         // faster way to do do incremental batch array pushes
