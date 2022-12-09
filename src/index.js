@@ -2,6 +2,7 @@ const { strictEqual } = require('assert')
 const path = require('path')
 const fs = require('fs')
 const { Readable } = require('stream')
+const { fileURLToPath } = require('url')
 
 class Walker extends Readable {
   /**
@@ -9,7 +10,10 @@ class Walker extends Readable {
    * @param {Object} options
    */
   constructor (dir, options) {
-    strictEqual(typeof dir, 'string', '`dir` parameter should be of type string. Got type: ' + typeof dir)
+    if (dir instanceof URL) {
+      dir = fileURLToPath(dir)
+    }
+    strictEqual(typeof dir, 'string', '`dir` parameter should be of type string or file URL. Got type: ' + typeof dir)
     options = {
       queueMethod: 'shift',
       pathSorter: undefined,
