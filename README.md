@@ -41,7 +41,7 @@ through every file and directory starting with `dir` as the root. Every `read()`
 returns an object with two properties: `path` and `stats`. `path` is the full path of the file and
 `stats` is an instance of [fs.Stats](https://nodejs.org/api/fs.html#fs_class_fs_stats).
 
-- `directory`: The directory to recursively walk. Type `string`.
+- `directory`: The directory to recursively walk. Type `string` or file `URL`.
 - `options`: [Readable stream options](https://nodejs.org/api/stream.html#stream_new_stream_readable_options) and
 the following:
   - `queueMethod` (`string`, default: `'shift'`): Either `'shift'` or `'pop'`. On `readdir()` array, call either `shift()` or `pop()`.
