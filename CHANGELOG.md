@@ -1,3 +1,8 @@
+4.1.0 / 2022-12-30
+------------------
+
+- Add support for passing `URL` file paths ([#46](https://github.com/jprichardson/node-klaw/issues/46), [#47](https://github.com/jprichardson/node-klaw/pull/47))
+
 4.0.1 / 2021-09-18
 ------------------
 
